@@ -1,6 +1,7 @@
 import { render, screen, within, waitFor, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 //import "@testing-library/jest-dom/extend-expect";
+import '@testing-library/jest-dom';
 import { BrowserRouter, MemoryRouter } from "react-router";
 import App from "./App";
 import { getAllProducts, getProductById } from "./products";
@@ -153,8 +154,12 @@ test("Verify that clicking on the 'Back to Products' link takes you back to the 
   render(
       <App />
   );
-
-  const backToProductsLink = screen.getByText(/Back to Products/i);
+  const productA = screen.getByTestId("product-1");
+const viewDetailsLink = within(productA).getByText(/View Details/i);
+await act(async () => {
+  await userEvent.click(viewDetailsLink);
+});
+const backToProductsLink = screen.getByText(/Back to Products/i);
   expect(backToProductsLink).toBeInTheDocument();
   await act(async () => {
     await userEvent.click(backToProductsLink);
